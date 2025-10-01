@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Hero } from "@/components/Hero";
 import { ImageUploader } from "@/components/ImageUploader";
+import { BatikPatternSelector, premadePatterns } from "@/components/BatikPatternSelector";
+import { ClothingSelector, type ClothingConfig } from "@/components/ClothingSelector";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Sparkles, Download, Loader2 } from "lucide-react";
@@ -10,9 +12,15 @@ import { supabase } from "@/integrations/supabase/client";
 const Index = () => {
   const [showUploader, setShowUploader] = useState(false);
   const [fabricImage, setFabricImage] = useState<File | null>(null);
+  const [selectedPattern, setSelectedPattern] = useState<string | null>(null);
   const [personImage, setPersonImage] = useState<File | null>(null);
   const [resultImage, setResultImage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [clothingConfig, setClothingConfig] = useState<ClothingConfig>({
+    type: "formal-tshirt",
+    sleeveType: "short",
+    collarType: "ordinary"
+  });
 
   const handleGetStarted = () => {
     setShowUploader(true);
@@ -34,9 +42,20 @@ const Index = () => {
     });
   };
 
+  const handlePatternSelect = (patternId: string, patternImage: string) => {
+    setSelectedPattern(patternId);
+    // Convert the imported image URL to a File object
+    fetch(patternImage)
+      .then(res => res.blob())
+      .then(blob => {
+        const file = new File([blob], `${patternId}.jpg`, { type: 'image/jpeg' });
+        setFabricImage(file);
+      });
+  };
+
   const handleGenerate = async () => {
-    if (!fabricImage || !personImage) {
-      toast.error("Please upload both images");
+    if ((!fabricImage && !selectedPattern) || !personImage) {
+      toast.error("Please select a batik pattern and upload your photo");
       return;
     }
 
@@ -45,14 +64,15 @@ const Index = () => {
 
     try {
       // Convert images to base64
-      const fabricBase64 = await convertImageToBase64(fabricImage);
+      const fabricBase64 = await convertImageToBase64(fabricImage!);
       const personBase64 = await convertImageToBase64(personImage);
 
       // Call edge function
       const { data, error } = await supabase.functions.invoke('apply-batik-pattern', {
         body: {
           fabricImage: fabricBase64,
-          personImage: personBase64
+          personImage: personBase64,
+          clothingConfig
         }
       });
 
@@ -97,9 +117,15 @@ const Index = () => {
 
   const handleReset = () => {
     setFabricImage(null);
+    setSelectedPattern(null);
     setPersonImage(null);
     setResultImage(null);
     setShowUploader(false);
+    setClothingConfig({
+      type: "formal-tshirt",
+      sleeveType: "short",
+      collarType: "ordinary"
+    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -112,29 +138,50 @@ const Index = () => {
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-12">
               <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                Upload Your Images
+                Customize Your Design
               </h2>
               <p className="text-muted-foreground text-lg">
-                Choose a batik pattern and your photo to see the magic
+                Choose a batik pattern, select clothing type, and upload your photo
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8 mb-8">
-              <ImageUploader
-                label="Batik Pattern"
-                description="Upload an image of fabric or clothing with batik pattern"
-                onImageSelect={setFabricImage}
-                image={fabricImage}
-                onClear={() => setFabricImage(null)}
-              />
+              <div className="space-y-6">
+                <BatikPatternSelector
+                  selectedPattern={selectedPattern}
+                  onSelect={handlePatternSelect}
+                  customPattern={fabricImage && !selectedPattern ? fabricImage : null}
+                />
+                
+                <ImageUploader
+                  label="Or Upload Custom Pattern"
+                  description="Upload your own batik pattern design"
+                  onImageSelect={(file) => {
+                    setFabricImage(file);
+                    setSelectedPattern(null);
+                  }}
+                  image={fabricImage && !selectedPattern ? fabricImage : null}
+                  onClear={() => {
+                    setFabricImage(null);
+                    setSelectedPattern(null);
+                  }}
+                />
+              </div>
 
-              <ImageUploader
-                label="Your Photo"
-                description="Upload a clear photo of your face or full body"
-                onImageSelect={setPersonImage}
-                image={personImage}
-                onClear={() => setPersonImage(null)}
-              />
+              <div className="space-y-6">
+                <ClothingSelector
+                  config={clothingConfig}
+                  onChange={setClothingConfig}
+                />
+
+                <ImageUploader
+                  label="Your Photo"
+                  description="Upload a clear photo of your face or full body"
+                  onImageSelect={setPersonImage}
+                  image={personImage}
+                  onClear={() => setPersonImage(null)}
+                />
+              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -142,7 +189,7 @@ const Index = () => {
                 variant="luxury"
                 size="xl"
                 onClick={handleGenerate}
-                disabled={!fabricImage || !personImage || isProcessing}
+                disabled={(!fabricImage && !selectedPattern) || !personImage || isProcessing}
                 className="gold-glow"
               >
                 {isProcessing ? (
@@ -158,7 +205,7 @@ const Index = () => {
                 )}
               </Button>
 
-              {(fabricImage || personImage) && (
+              {(fabricImage || selectedPattern || personImage) && (
                 <Button
                   variant="outline"
                   size="xl"

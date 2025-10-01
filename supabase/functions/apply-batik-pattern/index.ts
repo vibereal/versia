@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { fabricImage, personImage } = await req.json();
+    const { fabricImage, personImage, clothingConfig } = await req.json();
 
     if (!fabricImage || !personImage) {
       return new Response(
@@ -22,6 +22,30 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
         }
       );
+    }
+
+    // Build clothing description based on config
+    let clothingDescription = "";
+    switch (clothingConfig?.type) {
+      case "formal-tshirt":
+        const sleeve = clothingConfig.sleeveType === "long" ? "long-sleeved" : "short-sleeved";
+        const collar = clothingConfig.collarType === "shanghai" ? "shanghai collar" : "ordinary collar";
+        clothingDescription = `${sleeve} formal batik shirt with ${collar}`;
+        break;
+      case "suit":
+        clothingDescription = "formal batik suit jacket";
+        break;
+      case "psh":
+        clothingDescription = "PSH (Pakaian Seragam Harian) uniform with batik pattern, featuring short sleeves, chest pockets with button flaps, and a formal structured design";
+        break;
+      case "pdu-pramuka":
+        clothingDescription = "PDU Pramuka scout uniform with batik pattern, featuring short sleeves, chest pockets with button flaps, scout badges, and official scout uniform styling";
+        break;
+      case "jaket-jas":
+        clothingDescription = "formal batik blazer (jaket jas)";
+        break;
+      default:
+        clothingDescription = "formal batik shirt";
     }
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
@@ -46,7 +70,7 @@ serve(async (req) => {
             content: [
               {
                 type: 'text',
-                text: 'Apply the batik pattern from the first image onto the clothing or body of the person in the second image. Make it look natural and realistic, as if the person is wearing clothing made from this fabric. Preserve the person\'s pose and body shape. Ensure the pattern aligns with the contours of the body and clothing. Make it look luxurious and high-end.'
+                text: `Take the person from image 2 and seamlessly place them in ${clothingDescription}, using the pattern from image 1. Ensure the batik pattern is realistically applied to the clothing, making it appear as if the person is actually wearing it. Retain the person's facial features, pose, and body shape with perfect consistency. Apply the batik pattern only to the clothing, not to skin or face. Adjust the lighting to replicate a professional studio environment with warm white light, matching the lighting and shadows accordingly. Replace the background with a clean white studio backdrop. Ensure all elements of the scene align as if it were taken in a professional photo studio. Make the clothing look luxurious, well-fitted, and high-end with proper fabric draping and texture.`
               },
               {
                 type: 'image_url',
