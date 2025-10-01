@@ -1,0 +1,4 @@
+project_id = "wjeotewbwdrtlnpygqoz"
+
+[functions.apply-batik-pattern]
+verify_jwt = false
