@@ -1,8 +1,10 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Upload, X, Loader2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Upload, X, Camera } from "lucide-react";
 import { toast } from "sonner";
+import { WebcamCapture } from "./WebcamCapture";
 
 interface ImageUploaderProps {
   label: string;
@@ -57,6 +59,15 @@ export const ImageUploader = ({
     }
   };
 
+  const handleWebcamCapture = (file: File) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+    onImageSelect(file);
+  };
+
   return (
     <Card className="p-6 border-primary/20 bg-card/50 backdrop-blur-sm hover:border-primary/40 transition-all duration-300">
       <div className="space-y-4">
@@ -65,24 +76,42 @@ export const ImageUploader = ({
           <p className="text-sm text-muted-foreground">{description}</p>
         </div>
 
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="hidden"
-          id={`upload-${label.replace(/\s/g, '-').toLowerCase()}`}
-        />
-
         {!preview ? (
-          <label 
-            htmlFor={`upload-${label.replace(/\s/g, '-').toLowerCase()}`}
-            className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-primary/30 rounded-lg cursor-pointer hover:border-primary/60 transition-colors duration-300 bg-muted/20"
-          >
-            <Upload className="w-12 h-12 text-primary mb-4" />
-            <span className="text-sm text-muted-foreground">Click to upload image</span>
-            <span className="text-xs text-muted-foreground mt-2">Max size: 10MB</span>
-          </label>
+          <Tabs defaultValue="upload" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="upload">
+                <Upload className="w-4 h-4 mr-2" />
+                Upload
+              </TabsTrigger>
+              <TabsTrigger value="camera">
+                <Camera className="w-4 h-4 mr-2" />
+                Camera
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="upload" className="mt-4">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+                id={`upload-${label.replace(/\s/g, '-').toLowerCase()}`}
+              />
+              <label 
+                htmlFor={`upload-${label.replace(/\s/g, '-').toLowerCase()}`}
+                className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-primary/30 rounded-lg cursor-pointer hover:border-primary/60 transition-colors duration-300 bg-muted/20"
+              >
+                <Upload className="w-12 h-12 text-primary mb-4" />
+                <span className="text-sm text-muted-foreground">Click to upload image</span>
+                <span className="text-xs text-muted-foreground mt-2">Max size: 10MB</span>
+              </label>
+            </TabsContent>
+            
+            <TabsContent value="camera" className="mt-4">
+              <WebcamCapture onCapture={handleWebcamCapture} />
+            </TabsContent>
+          </Tabs>
         ) : (
           <div className="relative group">
             <img 
