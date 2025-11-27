@@ -23,7 +23,7 @@ export const ClothingSelector = ({ config, onChange }: ClothingSelectorProps) =>
     <Card className="p-6 border-primary/20 bg-card/50 backdrop-blur-sm">
       <div className="space-y-6">
         <div>
-          <h3 className="text-lg font-semibold text-primary mb-4">Clothing Type</h3>
+          <h3 className="text-lg font-semibold text-primary mb-4">Jenis Pakaian</h3>
           
           <RadioGroup
             value={config.type}
@@ -32,11 +32,11 @@ export const ClothingSelector = ({ config, onChange }: ClothingSelectorProps) =>
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="formal-tshirt" id="formal-tshirt" />
-              <Label htmlFor="formal-tshirt" className="cursor-pointer">Formal T-Shirt</Label>
+              <Label htmlFor="formal-tshirt" className="cursor-pointer">Kemeja Formal</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="suit" id="suit" />
-              <Label htmlFor="suit" className="cursor-pointer">Suit</Label>
+              <Label htmlFor="suit" className="cursor-pointer">Jas/Suit</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="psh" id="psh" />
@@ -56,33 +56,33 @@ export const ClothingSelector = ({ config, onChange }: ClothingSelectorProps) =>
         {config.type === "formal-tshirt" && (
           <div className="space-y-4 pt-4 border-t border-primary/20">
             <div className="space-y-2">
-              <Label>Sleeve Length</Label>
+              <Label>Panjang Lengan</Label>
               <Select
                 value={config.sleeveType || "short"}
                 onValueChange={(value) => onChange({ ...config, sleeveType: value as SleeveType })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select sleeve type" />
+                  <SelectValue placeholder="Pilih jenis lengan" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="short">Short Sleeve</SelectItem>
-                  <SelectItem value="long">Long Sleeve</SelectItem>
+                  <SelectItem value="short">Lengan Pendek</SelectItem>
+                  <SelectItem value="long">Lengan Panjang</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label>Collar Type</Label>
+              <Label>Jenis Kerah</Label>
               <Select
                 value={config.collarType || "ordinary"}
                 onValueChange={(value) => onChange({ ...config, collarType: value as CollarType })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select collar type" />
+                  <SelectValue placeholder="Pilih jenis kerah" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ordinary">Ordinary Collar</SelectItem>
-                  <SelectItem value="shanghai">Shanghai Collar</SelectItem>
+                  <SelectItem value="ordinary">Kerah Biasa</SelectItem>
+                  <SelectItem value="shanghai">Kerah Shanghai</SelectItem>
                 </SelectContent>
               </Select>
             </div>
