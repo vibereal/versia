@@ -27,9 +27,9 @@ export const BatikPatternSelector = ({
     <Card className="p-6 border-primary/20 bg-card/50 backdrop-blur-sm">
       <div className="space-y-4">
         <div>
-          <h3 className="text-lg font-semibold text-primary mb-2">Premade Batik Patterns</h3>
+          <h3 className="text-lg font-semibold text-primary mb-2">Pilih Pattern Batik</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            Choose from our collection or upload your own
+            Pilih dari koleksi kami atau upload pattern sendiri
           </p>
         </div>
 
@@ -64,7 +64,7 @@ export const BatikPatternSelector = ({
         {customPattern && (
           <div className="pt-4 border-t border-primary/20">
             <p className="text-sm text-primary">
-              ✓ Using your custom pattern
+              ✓ Menggunakan pattern custom Anda
             </p>
           </div>
         )}

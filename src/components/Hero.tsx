@@ -4,9 +4,14 @@ import heroImage from "@/assets/hero-batik.jpg";
 
 interface HeroProps {
   onGetStarted: () => void;
+  onTryAI?: () => void;
 }
 
-export const Hero = ({ onGetStarted }: HeroProps) => {
+export const Hero = ({ onGetStarted, onTryAI }: HeroProps) => {
+  const handleTryAI = () => {
+    const aiToolSection = document.getElementById('ai-tool');
+    aiToolSection?.scrollIntoView({ behavior: 'smooth' });
+  };
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -36,15 +41,19 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
           </div>
           
           {/* Main Heading */}
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tight">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-tight">
+            <span className="text-foreground">
+              Tampil Percaya Diri dengan Pakaian yang
+            </span>
+            <br />
             <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              VERSIA
+              Dijahit Khusus Untukmu
             </span>
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Experience the elegance of traditional Indonesian batik patterns on yourself. 
-            Our AI technology seamlessly blends luxury fabrics with your personal style.
+            Jasa jahit custom pria untuk jas, kemeja, batik, dan celana. 
+            Bawa desainmu sendiri atau konsultasikan dengan kami.
           </p>
           
           {/* CTA Buttons */}
@@ -55,17 +64,25 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
               onClick={onGetStarted}
               className="gold-glow-lg"
             >
-              Get Started
+              Konsultasi via WhatsApp
               <Sparkles className="w-5 h-5" />
+            </Button>
+            <Button 
+              variant="outline" 
+              size="xl"
+              onClick={handleTryAI}
+              className="border-primary/30 hover:bg-primary/10"
+            >
+              Coba AI Preview Batik
             </Button>
           </div>
           
           {/* Features */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-16">
             {[
-              { title: "AI-Powered", desc: "Advanced pattern recognition" },
-              { title: "Instant Preview", desc: "See results in seconds" },
-              { title: "Luxury Design", desc: "Batik patterns reimagined" }
+              { title: "Jahitan Presisi", desc: "Setiap detail disesuaikan dengan ukuran tubuh Anda" },
+              { title: "Custom Model", desc: "Bawa desain sendiri atau konsultasi dengan kami" },
+              { title: "Garansi Revisi", desc: "Kami jamin pas di badan atau gratis revisi" }
             ].map((feature, i) => (
               <div 
                 key={i}
