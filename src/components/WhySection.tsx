@@ -16,14 +16,14 @@ export const WhySection = () => {
   ];
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-background to-card/30">
+    <section className="py-20 px-4 from-background to-card/30">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Mengapa Harus <span className="text-primary">Jahit Custom?</span>
+            Mengapa Harus <span className="text-primary">Jahit Sendiri?</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Beli baju jadi di mall sering tidak pas? Di Versia, setiap pakaian dibuat khusus untuk tubuh unik Anda.
+            Beli baju jadi di mall sering ga pas? Di Versia, setiap pakaian dibuat khusus untuk tubuh Anda. Sesuai selera Anda.
           </p>
         </div>
 

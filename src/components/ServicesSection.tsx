@@ -1,5 +1,6 @@
 import { Shirt, Briefcase, Scissors, Users } from "lucide-react";
 import { Card } from "./ui/card";
+import batikPattern from "@/assets/batik-pattern-1.jpg";
 
 export const ServicesSection = () => {
   const services = [
@@ -30,8 +31,13 @@ export const ServicesSection = () => {
   ];
 
   return (
-    <section id="layanan" className="py-20 px-4 bg-card/30">
-      <div className="container mx-auto max-w-6xl">
+    <section id="layanan" className="relative py-20 px-4 overflow-hidden">
+      {/* Background Pattern */}
+      <div
+        className="absolute inset-0 z-0 opacity-[0.03]"
+      />
+
+      <div className="relative z-10 container mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             Layanan <span className="text-primary">& Keahlian</span>
@@ -43,7 +49,7 @@ export const ServicesSection = () => {
 
         <div className="grid md:grid-cols-2 gap-6 mb-12">
           {services.map((service, i) => (
-            <Card key={i} className="p-6 hover:shadow-gold transition-all duration-300 bg-card border-primary/20">
+            <Card key={i} className="p-6 hover:shadow-gold transition-all duration-300 bg-card/80 backdrop-blur-sm border-primary/20">
               <service.icon className="w-12 h-12 text-primary mb-4" />
               <h3 className="text-2xl font-bold mb-2">{service.title}</h3>
               <p className="text-muted-foreground mb-4">{service.desc}</p>
@@ -59,7 +65,7 @@ export const ServicesSection = () => {
           ))}
         </div>
 
-        <div className="text-center p-6 rounded-xl bg-primary/10 border border-primary/30">
+        <div className="text-center p-6 rounded-xl bg-primary/10 border border-primary/30 backdrop-blur-sm">
           <p className="text-lg font-semibold text-primary">
             ✨ Bisa Custom Model Sesuai Foto/Request Anda
           </p>
