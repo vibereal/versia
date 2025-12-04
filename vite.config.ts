@@ -7,10 +7,10 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
-    port: 3101,
+    port: 3103,
   },
   preview: {
-    port: 3101,
+    port: 3103,
     allowedHosts: [
       'versia.vibereal.online', // Menambahkan domain yang diizinkan
     ],
