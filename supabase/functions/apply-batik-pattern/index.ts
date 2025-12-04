@@ -12,7 +12,12 @@ serve(async (req) => {
   }
 
   try {
-    const { clothingImage, personImage } = await req.json();
+    const body = await req.json();
+    const { clothingImage, personImage } = body;
+
+    console.log('Received request with keys:', Object.keys(body));
+    console.log('clothingImage present:', !!clothingImage);
+    console.log('personImage present:', !!personImage);
 
     if (!clothingImage || !personImage) {
       return new Response(
