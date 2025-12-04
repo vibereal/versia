@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { BatikPatternSelector } from "./BatikPatternSelector";
+import { ProductSelector } from "./ProductSelector";
 import { ImageUploader } from "./ImageUploader";
-import { ClothingSelector, type ClothingConfig } from "./ClothingSelector";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Download, RotateCcw, Loader2, Sparkles } from "lucide-react";
@@ -9,16 +8,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "./ui/use-toast";
 
 export const AIToolSection = () => {
-  const [fabricImage, setFabricImage] = useState<File | null>(null);
-  const [selectedPattern, setSelectedPattern] = useState<string | null>(null);
+  const [clothingImage, setClothingImage] = useState<File | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [personImage, setPersonImage] = useState<File | null>(null);
   const [resultImage, setResultImage] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [clothingConfig, setClothingConfig] = useState<ClothingConfig>({
-    type: "formal-tshirt",
-    sleeveType: "short",
-    collarType: "ordinary"
-  });
 
   const { toast } = useToast();
 
@@ -31,29 +25,29 @@ export const AIToolSection = () => {
     });
   };
 
-  const handlePatternSelect = (patternId: string, patternImage: string) => {
-    setSelectedPattern(patternId);
-    fetch(patternImage)
+  const handleProductSelect = (productId: string, productImage: string) => {
+    setSelectedProduct(productId);
+    fetch(productImage)
       .then(res => res.blob())
       .then(blob => {
-        const file = new File([blob], `${patternId}.jpg`, { type: 'image/jpeg' });
-        setFabricImage(file);
+        const file = new File([blob], `${productId}.png`, { type: 'image/png' });
+        setClothingImage(file);
       })
       .catch(error => {
-        console.error("Error loading pattern:", error);
+        console.error("Error loading product:", error);
         toast({
           title: "Error",
-          description: "Gagal memuat pattern batik",
+          description: "Gagal memuat produk",
           variant: "destructive"
         });
       });
   };
 
   const handleGenerate = async () => {
-    if (!fabricImage || !personImage) {
+    if (!clothingImage || !personImage) {
       toast({
         title: "Data Tidak Lengkap",
-        description: "Silakan pilih pattern batik dan upload foto Anda",
+        description: "Silakan pilih pakaian dan upload foto Anda",
         variant: "destructive"
       });
       return;
@@ -62,14 +56,13 @@ export const AIToolSection = () => {
     setIsProcessing(true);
 
     try {
-      const fabricBase64 = await convertImageToBase64(fabricImage);
+      const clothingBase64 = await convertImageToBase64(clothingImage);
       const personBase64 = await convertImageToBase64(personImage);
 
       const { data, error } = await supabase.functions.invoke('apply-batik-pattern', {
         body: {
-          fabricImage: fabricBase64,
-          personImage: personBase64,
-          clothingConfig
+          clothingImage: clothingBase64,
+          personImage: personBase64
         }
       });
 
@@ -79,7 +72,7 @@ export const AIToolSection = () => {
         setResultImage(data.image);
         toast({
           title: "Berhasil!",
-          description: "Preview batik Anda telah dibuat"
+          description: "Preview virtual try-on Anda telah dibuat"
         });
       }
     } catch (error) {
@@ -98,7 +91,7 @@ export const AIToolSection = () => {
     if (resultImage) {
       const link = document.createElement('a');
       link.href = resultImage;
-      link.download = 'versia-batik-preview.png';
+      link.download = 'versia-vton-preview.png';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -106,15 +99,10 @@ export const AIToolSection = () => {
   };
 
   const handleReset = () => {
-    setFabricImage(null);
-    setSelectedPattern(null);
+    setClothingImage(null);
+    setSelectedProduct(null);
     setPersonImage(null);
     setResultImage("");
-    setClothingConfig({
-      type: "formal-tshirt",
-      sleeveType: "short",
-      collarType: "ordinary"
-    });
   };
 
   return (
@@ -126,32 +114,27 @@ export const AIToolSection = () => {
             <span className="text-sm font-medium text-primary tracking-wider">TEKNOLOGI AI</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Coba <span className="text-primary">AI Preview Batik</span>
+            Coba <span className="text-primary">Virtual Try-On</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Lihat bagaimana pattern batik akan terlihat pada pakaian Anda dengan teknologi AI
+            Lihat bagaimana pakaian kami terlihat pada Anda dengan teknologi AI
           </p>
         </div>
 
         {!resultImage ? (
           <div className="space-y-8">
-            <BatikPatternSelector 
-              selectedPattern={selectedPattern}
-              onSelect={handlePatternSelect}
-              customPattern={fabricImage && !selectedPattern ? fabricImage : null}
-            />
-            
             <div className="grid md:grid-cols-2 gap-8">
+              <ProductSelector
+                selectedProduct={selectedProduct}
+                onSelect={handleProductSelect}
+              />
+
               <ImageUploader
                 label="Upload Foto Anda"
-                description="Upload foto Anda dengan jelas untuk hasil terbaik"
+                description="Upload foto full body atau setengah badan untuk hasil terbaik"
                 onImageSelect={setPersonImage}
                 image={personImage}
                 onClear={() => setPersonImage(null)}
-              />
-              <ClothingSelector
-                config={clothingConfig}
-                onChange={setClothingConfig}
               />
             </div>
 
@@ -159,7 +142,7 @@ export const AIToolSection = () => {
               <Button
                 size="lg"
                 onClick={handleGenerate}
-                disabled={isProcessing || !fabricImage || !personImage}
+                disabled={isProcessing || !clothingImage || !personImage}
                 className="gold-glow-lg"
               >
                 {isProcessing ? (

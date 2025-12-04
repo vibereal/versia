@@ -13,7 +13,7 @@ import heroLoop from "@/assets/hero-loop.mp4";
 
 const Index = () => {
   const handleGetStarted = () => {
-    window.open("https://wa.me/6281234567890?text=Halo%20Versia,%20saya%20tertarik%20dengan%20jasa%20jahit%20custom", "_blank");
+    window.open("https://wa.me/message/CSDILBKEKRUNI1", "_blank");
   };
 
   return (
@@ -42,7 +42,7 @@ const Index = () => {
         <HowItWorksSection />
         <TestimonialsSection />
         <PricingSection />
-        <GuaranteeSection />
+        {/* <GuaranteeSection /> */}
         <ContactSection />
         <AIToolSection />
         <Footer />

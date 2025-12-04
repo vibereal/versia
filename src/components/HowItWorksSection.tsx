@@ -6,7 +6,7 @@ export const HowItWorksSection = () => {
       icon: MessageCircle,
       number: "01",
       title: "Konsultasi & Pengukuran",
-      desc: "Datang ke lokasi, panggil ke rumah, atau kirim ukuran online via WhatsApp"
+      desc: "Datang ke lokasi atau kirim contoh baju yang ingin diukur"
     },
     {
       icon: Scissors,
@@ -51,9 +51,9 @@ export const HowItWorksSection = () => {
                 <h3 className="text-xl font-bold mb-3">{step.title}</h3>
                 <p className="text-sm text-muted-foreground">{step.desc}</p>
               </div>
-              {i < steps.length - 1 && (
+              {/* {i < steps.length - 1 && (
                 <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-0.5 bg-primary/30" />
-              )}
+              )} */}
             </div>
           ))}
         </div>

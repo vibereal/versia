@@ -11,17 +11,6 @@ export const Footer = () => {
             <p className="text-muted-foreground mb-4">
               Tailor profesional untuk pria di Tuban. Jahitan presisi, pas di badan, dan sesuai karakter Anda.
             </p>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/30 transition-colors">
-                <Instagram className="w-5 h-5 text-primary" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/30 transition-colors">
-                <Facebook className="w-5 h-5 text-primary" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/30 transition-colors">
-                <MessageCircle className="w-5 h-5 text-primary" />
-              </a>
-            </div>
           </div>
 
           {/* Quick Links */}
@@ -39,10 +28,8 @@ export const Footer = () => {
           <div>
             <h4 className="font-bold mb-4">Kontak</h4>
             <ul className="space-y-2 text-muted-foreground">
-              <li>+62 812-3456-7890</li>
-              <li>Jl. Contoh No. 123</li>
-              <li>Tuban, Jawa Timur</li>
-              <li>62381</li>
+              <li>+62 812-3074-4680</li>
+              <li>Jl. AKBP Suroko No.21, Kebonsari, Kec. Tuban, Kabupaten Tuban, Jawa Timur 62317</li>
             </ul>
           </div>
         </div>

@@ -12,40 +12,16 @@ serve(async (req) => {
   }
 
   try {
-    const { fabricImage, personImage, clothingConfig } = await req.json();
+    const { clothingImage, personImage } = await req.json();
 
-    if (!fabricImage || !personImage) {
+    if (!clothingImage || !personImage) {
       return new Response(
-        JSON.stringify({ error: 'Both fabric and person images are required' }),
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        JSON.stringify({ error: 'Both clothing and person images are required' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         }
       );
-    }
-
-    // Build clothing description based on config
-    let clothingDescription = "";
-    switch (clothingConfig?.type) {
-      case "formal-tshirt":
-        const sleeve = clothingConfig.sleeveType === "long" ? "long-sleeved" : "short-sleeved";
-        const collar = clothingConfig.collarType === "shanghai" ? "shanghai collar" : "ordinary collar";
-        clothingDescription = `${sleeve} formal batik shirt with ${collar}`;
-        break;
-      case "suit":
-        clothingDescription = "formal batik suit jacket";
-        break;
-      case "psh":
-        clothingDescription = "PSH (Pakaian Seragam Harian) uniform with batik pattern, featuring short sleeves, chest pockets with button flaps, and a formal structured design";
-        break;
-      case "pdu-pramuka":
-        clothingDescription = "PDU Pramuka scout uniform with batik pattern, featuring short sleeves, chest pockets with button flaps, scout badges, and official scout uniform styling";
-        break;
-      case "jaket-jas":
-        clothingDescription = "formal batik blazer (jaket jas)";
-        break;
-      default:
-        clothingDescription = "formal batik shirt";
     }
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
@@ -70,12 +46,12 @@ serve(async (req) => {
             content: [
               {
                 type: 'text',
-                text: `Take the person from image 2 and seamlessly place them in ${clothingDescription}, using the pattern from image 1. Ensure the batik pattern is realistically applied to the clothing, making it appear as if the person is actually wearing it. Retain the person's facial features, pose, and body shape with perfect consistency. Apply the batik pattern only to the clothing, not to skin or face. Adjust the lighting to replicate a professional studio environment with warm white light, matching the lighting and shadows accordingly. Replace the background with a clean white studio backdrop. Ensure all elements of the scene align as if it were taken in a professional photo studio. Make the clothing look luxurious, well-fitted, and high-end with proper fabric draping and texture.`
+                text: `Take the person from image 2 and seamlessly dress them in the clothing shown in image 1. Retain the person's facial features, pose, and body shape with perfect consistency. Adjust the lighting to replicate a professional studio environment with warm white light, matching the lighting and shadows accordingly. Replace the background with a clean white studio backdrop. Ensure all elements of the scene align as if it were taken in a professional photo studio. Make the clothing look luxurious, well-fitted, and high-end with proper fabric draping and texture.`
               },
               {
                 type: 'image_url',
                 image_url: {
-                  url: fabricImage
+                  url: clothingImage
                 }
               },
               {
@@ -94,23 +70,23 @@ serve(async (req) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('AI API error:', response.status, errorText);
-      
+
       if (response.status === 429) {
         return new Response(
           JSON.stringify({ error: 'Rate limit exceeded. Please try again later.' }),
-          { 
-            status: 429, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          {
+            status: 429,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
           }
         );
       }
-      
+
       if (response.status === 402) {
         return new Response(
           JSON.stringify({ error: 'Payment required. Please add credits to your workspace.' }),
-          { 
-            status: 402, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          {
+            status: 402,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
           }
         );
       }
@@ -130,20 +106,20 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({ image: generatedImage }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       }
     );
 
   } catch (error) {
     console.error('Error in apply-batik-pattern:', error);
     return new Response(
-      JSON.stringify({ 
-        error: error instanceof Error ? error.message : 'An unexpected error occurred' 
+      JSON.stringify({
+        error: error instanceof Error ? error.message : 'An unexpected error occurred'
       }),
-      { 
-        status: 500, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       }
     );
   }

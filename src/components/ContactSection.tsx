@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 
 export const ContactSection = () => {
   const handleWhatsApp = () => {
-    window.open("https://wa.me/6281234567890?text=Halo%20Versia,%20saya%20tertarik%20dengan%20jasa%20jahit%20custom", "_blank");
+    window.open("https://wa.me/message/CSDILBKEKRUNI1", "_blank");
   };
 
   return (
@@ -14,7 +14,7 @@ export const ContactSection = () => {
             Lokasi <span className="text-primary">& Kontak</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Kunjungi workshop kami atau hubungi untuk konsultasi dan pengukuran
+            Kunjungi toko kami atau hubungi untuk konsultasi dan pengukuran
           </p>
         </div>
 
@@ -26,7 +26,7 @@ export const ContactSection = () => {
               <div>
                 <h3 className="font-bold mb-2">Alamat Workshop</h3>
                 <p className="text-muted-foreground">
-                  Jl. Contoh No. 123, Tuban, Jawa Timur 62381
+                  Jl. AKBP Suroko No.21, Kebonsari, Kec. Tuban, Kabupaten Tuban, Jawa Timur 62317
                 </p>
               </div>
             </div>
@@ -36,7 +36,7 @@ export const ContactSection = () => {
               <div>
                 <h3 className="font-bold mb-2">Telepon & WhatsApp</h3>
                 <p className="text-muted-foreground">
-                  +62 812-3456-7890
+                  +62 812-3074-4680
                 </p>
               </div>
             </div>
@@ -46,14 +46,14 @@ export const ContactSection = () => {
               <div>
                 <h3 className="font-bold mb-2">Jam Operasional</h3>
                 <p className="text-muted-foreground">
-                  Senin - Sabtu: 09.00 - 17.00 WIB<br />
-                  Minggu: Tutup (atau by appointment)
+                  Senin - Sabtu: 08.00 - 16.00 WIB<br />
+                  Minggu: Tutup
                 </p>
               </div>
             </div>
 
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="w-full gold-glow-lg"
               onClick={handleWhatsApp}
             >
@@ -65,7 +65,7 @@ export const ContactSection = () => {
           {/* Map */}
           <div className="rounded-xl overflow-hidden border border-primary/20 h-[400px] bg-card/50">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.56211042117!2d112.0296665!3d-6.894537!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e77f4b66c07b3b3%3A0x9dbc0ea0f27e9f0e!2sTuban%2C%20Jawa%20Timur!5e0!3m2!1sid!2sid!4v1234567890"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.902230342252!2d112.0628239!3d-6.9022947!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7797e2516364c1%3A0xd96eb7b6d14ae882!2sVERSIA%20TAILOR%20dan%20BATIK!5e0!3m2!1sen!2sid!4v1764592043197!5m2!1sen!2sid"
               width="100%"
               height="100%"
               style={{ border: 0 }}
