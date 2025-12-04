@@ -8,15 +8,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "./ui/use-toast";
 
 export const AIToolSection = () => {
-  const [clothingImage, setClothingImage] = useState<File | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+  const [clothingImageUrl, setClothingImageUrl] = useState<string | null>(null);
   const [personImage, setPersonImage] = useState<File | null>(null);
   const [resultImage, setResultImage] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);
 
   const { toast } = useToast();
 
-  const convertImageToBase64 = (file: File): Promise<string> => {
+  const convertFileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -25,26 +25,24 @@ export const AIToolSection = () => {
     });
   };
 
+  const convertUrlToBase64 = async (url: string): Promise<string> => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
+
   const handleProductSelect = (productId: string, productImage: string) => {
     setSelectedProduct(productId);
-    fetch(productImage)
-      .then(res => res.blob())
-      .then(blob => {
-        const file = new File([blob], `${productId}.png`, { type: 'image/png' });
-        setClothingImage(file);
-      })
-      .catch(error => {
-        console.error("Error loading product:", error);
-        toast({
-          title: "Error",
-          description: "Gagal memuat produk",
-          variant: "destructive"
-        });
-      });
+    setClothingImageUrl(productImage);
   };
 
   const handleGenerate = async () => {
-    if (!clothingImage || !personImage) {
+    if (!clothingImageUrl || !personImage) {
       toast({
         title: "Data Tidak Lengkap",
         description: "Silakan pilih pakaian dan upload foto Anda",
@@ -56,9 +54,11 @@ export const AIToolSection = () => {
     setIsProcessing(true);
 
     try {
-      const clothingBase64 = await convertImageToBase64(clothingImage);
-      const personBase64 = await convertImageToBase64(personImage);
-
+      console.log("Converting images to base64...");
+      const clothingBase64 = await convertUrlToBase64(clothingImageUrl);
+      const personBase64 = await convertFileToBase64(personImage);
+      
+      console.log("Calling edge function...");
       const { data, error } = await supabase.functions.invoke('apply-batik-pattern', {
         body: {
           clothingImage: clothingBase64,
@@ -66,7 +66,14 @@ export const AIToolSection = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Edge function error:", error);
+        throw error;
+      }
+
+      if (data?.error) {
+        throw new Error(data.error);
+      }
 
       if (data?.image) {
         setResultImage(data.image);
@@ -74,12 +81,14 @@ export const AIToolSection = () => {
           title: "Berhasil!",
           description: "Preview virtual try-on Anda telah dibuat"
         });
+      } else {
+        throw new Error("No image returned from AI");
       }
     } catch (error) {
       console.error("Error generating preview:", error);
       toast({
         title: "Error",
-        description: "Terjadi kesalahan saat membuat preview",
+        description: error instanceof Error ? error.message : "Terjadi kesalahan saat membuat preview",
         variant: "destructive"
       });
     } finally {
@@ -99,7 +108,7 @@ export const AIToolSection = () => {
   };
 
   const handleReset = () => {
-    setClothingImage(null);
+    setClothingImageUrl(null);
     setSelectedProduct(null);
     setPersonImage(null);
     setResultImage("");
@@ -142,7 +151,7 @@ export const AIToolSection = () => {
               <Button
                 size="lg"
                 onClick={handleGenerate}
-                disabled={isProcessing || !clothingImage || !personImage}
+                disabled={isProcessing || !clothingImageUrl || !personImage}
                 className="gold-glow-lg"
               >
                 {isProcessing ? (
