@@ -51,7 +51,7 @@ serve(async (req) => {
             content: [
               {
                 type: 'text',
-                text: `Take the person from image 2 and seamlessly dress them in the clothing shown in image 1. Retain the person's facial features, pose, and body shape with perfect consistency. Adjust the lighting to replicate a professional studio environment with warm white light, matching the lighting and shadows accordingly. Replace the background with a clean white studio backdrop. Ensure all elements of the scene align as if it were taken in a professional photo studio. Make the clothing look luxurious, well-fitted, and high-end with proper fabric draping and texture.`
+                text: `Apply the clothing shown in the first image to the person shown in the second image. The first image displays the clothing product only. The second image shows the person who should be wearing the clothing. Generate a high-quality, realistic image of the person wearing the clothing.`
               },
               {
                 type: 'image_url',

@@ -1,15 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { Check } from "lucide-react";
-import produkBatik1 from "@/assets/produk-batik1.png";
-import produkBatik2 from "@/assets/produk-batik2.png";
-import produkBatik4 from "@/assets/produk-batik4.png";
-import produkJas from "@/assets/produk-jas.png";
+import productBatik1 from "@/assets/productonly-batik1.png";
+import productJasBatik from "@/assets/productonly-jasbatik.png";
+import productAdatJawa from "@/assets/productonly-pakaianadatjawa.png";
+import productSipilHarian from "@/assets/productonly-pakaiansipilharian.png";
 
 export const products = [
-    { id: "product-1", name: "Batik Modern 1", image: produkBatik1 },
-    { id: "product-2", name: "Batik Modern 2", image: produkBatik2 },
-    { id: "product-3", name: "Batik Modern 3", image: produkBatik4 },
-    { id: "product-4", name: "Jas Formal", image: produkJas },
+    { id: "product-1", name: "Batik 1", image: productBatik1 },
+    { id: "product-2", name: "Jas Batik", image: productJasBatik },
+    { id: "product-3", name: "Pakaian Adat Jawa", image: productAdatJawa },
+    { id: "product-4", name: "Pakaian Sipil Harian", image: productSipilHarian },
 ];
 
 interface ProductSelectorProps {
@@ -37,8 +37,8 @@ export const ProductSelector = ({
                             key={product.id}
                             onClick={() => onSelect(product.id, product.image)}
                             className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition-all duration-300 hover:border-primary/60 ${selectedProduct === product.id
-                                    ? "border-primary ring-2 ring-primary/50"
-                                    : "border-primary/20"
+                                ? "border-primary ring-2 ring-primary/50"
+                                : "border-primary/20"
                                 }`}
                         >
                             <div className="aspect-[3/4] w-full bg-white/5">
